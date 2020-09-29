@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+
+  "name": "Open MAL",
+  "description": "Open KissAnime show on MAL",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "images/mal-icon-19.png",
+    "default_title": "MAL"
+},
+"background": {
+    "scripts": ["background.js"],
+    "persistent": false
+},
+"content_scripts": [{
+  "matches": ["*://*.kissanime.nz/*"],
+  "js": ["content.js"]
+}],
+"permissions": ["activeTab"]
+}
