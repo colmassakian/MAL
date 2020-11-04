@@ -1,7 +1,7 @@
-var urlRegex = /^https?:\/\/(?:[^./?#]+\.)?kissanime\.nz/;
+var urlRegexKiss = /^https?:\/\/(?:[^./?#]+\.)?kissanime\.nz/;
+var urlRegexMal = /^https?:\/\/(?:[^./?#]+\.)?myanimelist\.net/;
 
-function openPage(searchTerm) {
-  console.log(searchTerm);
+function openPageMal(searchTerm) {
   var query = `
   query ($search: String, $type: MediaType) {
     Page {
@@ -57,9 +57,19 @@ function openPage(searchTerm) {
     });
 }
 
+function openPageKiss(animeURL) {
+  chrome.tabs.create({ url: animeURL });
+}
+
 chrome.browserAction.onClicked.addListener(function(tab){
-  if (urlRegex.test(tab.url)) {
+  if (urlRegexKiss.test(tab.url)) // If the current tab is KissAnime, open the MAL page
+  {
     // ...if it matches, send a message specifying a callback too
-    chrome.tabs.sendMessage(tab.id, {text: 'report_back'}, openPage);
+    chrome.tabs.sendMessage(tab.id, {text: 'report_back_kiss'}, openPageMal);
+  }
+  else if (urlRegexMal.test(tab.url)) // If the current tab is MAL, open the KissAnime search
+  {
+    // ...if it matches, send a message specifying a callback too
+    chrome.tabs.sendMessage(tab.id, {text: 'report_back_mal'}, openPageKiss);
   }
 });
